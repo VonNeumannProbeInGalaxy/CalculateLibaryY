@@ -1,10 +1,16 @@
 #include "math.h"
 #include "CLY.h" 
 
-//妙妙数字放这里 
-static double MassofShip = 1145141919810.0;
+//妙妙数字放这里-仅供测试用例 
+static double CMassofShip = 1145141919810.0;
+static double CRadiusofMirror = 1145140.0/2; //飞船反射镜半径 
+static float CBLGk = 0.9998;//反射率 
+static float CTmax = 919.810;//接受能流温度
+static double CMWet = 5.14;//E11飞船湿重
+CMWet = CMWet * E11;
+ 
 
-
+//恒星基本参数计算 
 //质量计算半径  
 float StarsRadius(double mass)  ///拟合参数 
 {
@@ -132,5 +138,63 @@ float LandingCostEnergy(double PersentofC)
 	return CALUMC;
 }
 //恒星际光帆船与RKKV1 -光帆与航行(0.2.1) 
-//光帆功率 
-//float 
+//光帆面积 
+float MirrorRadiustoArea(double RadiusofMirror)
+{
+	double UPOC,DWNOC;
+	UPOC = pow(RadiusofMirror,2);
+	DWNOC = UPOC * Pai;
+	return DWNOC; 
+}
+//布拉格反射率计算 
+float BraggReflection(float FilmN1,float FilmN2,int FilmNumber,float BaseFilmN)//交替生长膜层1,2折射率，层数，基底折射率 
+{
+	//默认 真空 作为介质 -1.00-折射率 
+	float MediumRefractive = 1.00;
+	float UPOC,DWNOC,CALUMC;
+	UPOC = pow(FilmN2,2*FilmNumber);
+	DWNOC = pow(FilmN1,2*FilmNumber);
+	CALUMC = UPOC *MediumRefractive;
+	UPOC = DWNOC *BaseFilmN;
+	DWNOC = CALUMC - UPOC;
+	UPOC = CALUMC + UPOC;
+	DWNOC = DWNOC / UPOC;
+	CALUMC = pow(DWNOC,2);
+	return CALUMC;
+}
+//发射飞船所需功率 
+float TotalMinMirrowPower(float Tmax,float KBragg,double AreaofMirror)
+{
+	float UPOC,DWNOC,CALUMC;
+	DWNOC = pow(Tmax,4);
+	UPOC = StefanBoltzmannConst * DWNOC;
+	CALUMC = 1.0 - KBragg;
+	DWNOC = UPOC / CALUMC;
+	CALUMC = DWNOC * AreaofMirror;
+	return  CALUMC;
+}
+//光帆内压 
+float PsailCalluate(float Tmax,float KBragg)
+{
+	float UPOC,DWNOC,CALUMC;
+	DWNOC = pow(Tmax,4);
+	UPOC = StefanBoltzmannConst * DWNOC;
+	CALUMC = 1.0 - KBragg;
+	DWNOC = UPOC / CALUMC;
+	DWNOC = DWNOC*2;
+	CALUMC = DWNOC / C;
+	return CALUMC;
+}
+//单个光帆极限缆绳长度（经过变形，需要检验） 
+float SingalSailMaxCable(double MaxMateralStrengh,float Acceleration,float MateralDensity,double MaxCableMass,double MaxWetMass)
+{
+	float UPOC,DWNOC,CALUMC;
+	UPOC = MaxCableMass * MaxMateralStrengh;
+	DWNOC = MateralDensity * Acceleration;
+	CALUMC = MaxWetMass + MaxCableMass;
+	DWNOC = DWNOC * CALUMC;
+	CALUMC = UPOC / DWNOC;
+	return CALUMC;
+ } 
+ //恒星际光帆船与RKKV2 -光帆与航行(0.2.2) 
+ //帆底面密度最小值 

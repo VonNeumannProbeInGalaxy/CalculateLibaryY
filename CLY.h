@@ -19,16 +19,15 @@
 #define AU 149597870691.0                        //天文单位数值
 #define MassofEarth 5.9742                       //E24 
 #define MassofSun 1.9891                         //E30
+#define ly 9454254955488000.0                    //光年 
 //预设数值
 
-
-//extern double ly = C*SecondofYear;   //光年 
 
 struct StarsSelf			  //描述恒星基本物理量 
 {
 	unsigned int IdentifyNum;          //唯一识别码——用作统一其他可能需要添加的结构体描述，只有0～4294967295 
 	double lox,loy,loz;		           //三维空间坐标——需要一个“零点”  
-	double lum,Teff;                   //光强度,等效温度
+	double lum,Teff;                   //光强度,等效温度，只需要算一次 
 	double mass,radius;  	           //相对太阳质量,相对太阳半径——倍数 
 	float age,HeavyElement;            //恒星年龄，重金属丰度（注意“重金属”定义 ） 
 	unsigned int ally;	               //阵营编码	
@@ -39,16 +38,18 @@ struct ShipsDefine            //描述飞船物理量
 {
 	unsigned int IdentifyNum;          //
 	double ShipMass;                   // 
-	double MirrorArea;                 //
+	double MirrorRadius;               //
 	unsigned int SystemFrom;           //来自哪一个恒星系 
 	unsigned int SystemTo;             //前往哪一个恒星系
 	float ProgessPershent;             //进度条
 	double PersentofC;                 //当前速度
 	float Tmax;                        //最高耐受温度
-	float MassWet;                     //除了光帆以外的 
+	float MassWet;                     //除了光帆以外的湿重
+	float MassDry;                     //除了光帆之外的干重
+	float MirrorMass;                  //光帆质量 
 	
 };
-
+//函数部分 
 //恒星参数计算函数 
 //已验证 
 float StarsTemp(struct StarsSelf SSCP); 
@@ -61,7 +62,12 @@ float LaserEfficiency(double PersentofC);
 float TotalLaserEfficiency(double PersentofC);
 float TargetVDemandDysonPower(double PersentofC);
 float LandingCostEnergy(double PersentofC);
- 
+float MirrorRadiustoArea(double RadiusofMirror);
+float BraggReflection(float FilmN1,float FilmN2,int FilmNumber,float BaseFilmN);
+float TotalMinMirrowPower(float Tmax,float KBragg,double AreaofMirror);
+float PsailCalluate(float Tmax,float KBragg);
+float SingalSailMaxCable(double MaxMateralStrengh,float Acceleration,float MateralDensity,double MaxCableMass,double MaxWetMass);
+
 
 #pragma message("CLY-Version-0.2.0")  ///在编译器中显示版本号，可删 
 
