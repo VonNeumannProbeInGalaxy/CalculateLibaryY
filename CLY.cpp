@@ -1,14 +1,16 @@
 #include "math.h"
 #include "CLY.h" 
 
+//公式来源于：达尔文黎明讨论组 
+
 //妙妙数字放这里-仅供测试用例 
 static double CMassofShip = 1145141919810.0;
 static double CRadiusofMirror = 1145140.0/2; //飞船反射镜半径 
 static float CBLGk = 0.9998;//反射率 
 static float CTmax = 919.810;//接受能流温度
-static double CMWet = 5.14;//E11飞船湿重
-CMWet = CMWet * E11;
- 
+//static double CMWet = 5.14;//E11飞船湿重
+static float DensityofMirror = 0.05;//光帆总平均密度，考虑更多死重之后 
+static float ShipWeave = 0.0114514/3600; //角秒：一千米尺度的物体来回振幅为2.4毫米 
 
 //恒星基本参数计算 
 //质量计算半径  
@@ -197,4 +199,45 @@ float SingalSailMaxCable(double MaxMateralStrengh,float Acceleration,float Mater
 	return CALUMC;
  } 
  //恒星际光帆船与RKKV2 -光帆与航行(0.2.2) 
- //帆底面密度最小值 
+ //帆底厚度最小值 ——使用碳纤维管计算 
+ float SailMinNumDensity(float Runit,float InnerP)
+ {
+	float UPOC,DWNOC,CALUMC;
+	UPOC = Runit * InnerP;
+	DWNOC = DensityofCarbonPipe *2;
+	CALUMC = UPOC/DWNOC;
+	return CALUMC;
+} 
+//光帆质量计算
+float SailMassCal(float Area)
+{
+	Area = DensityofMirror * Area;
+	return Area;
+ }
+//飞船加速度
+float AccelerationCl(float Tmax,float KBragg,double AreaofMirror)
+{
+	float UPOC,DWNOC,CALUMC;
+	UPOC = TotalMinMirrowPower(Tmax,KBragg,AreaofMirror);
+	DWNOC = 2.0 - KBragg;
+	CALUMC = UPOC *  DWNOC;
+	UPOC = C*CMassofShip;//飞船全重 
+	CALUMC = CALUMC/UPOC;
+	return CALUMC;
+}
+//不考虑衍射的精度需求计算——计算加速距离
+float DistenseofAcceleration()
+{
+	float UPOC,DWNOC,CALUMC;
+	UPOC = 360.0 * CRadiusofMirror;
+	DWNOC = 2.0*Pai;
+	CALUMC = DWNOC * ShipWeave;
+	CALUMC = UPOC / CALUMC;
+	return CALUMC;
+}
+//末速度计算--经过化简 
+float MaxVCl()
+{
+	float UPOC,DWNOC,CALUMC;
+	return CALUMC;
+} 

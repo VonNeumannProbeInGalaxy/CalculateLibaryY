@@ -21,7 +21,7 @@
 #define MassofSun 1.9891                         //E30
 #define ly 9454254955488000.0                    //光年 
 //预设数值
-
+#define DensityofCarbonPipe 2000.0
 
 struct StarsSelf			  //描述恒星基本物理量 
 {
@@ -34,21 +34,32 @@ struct StarsSelf			  //描述恒星基本物理量
 	float Facmass,Powmass,Unusemass;   //工厂质量，发电机质量，未利用质量 
 };
 
-struct ShipsDefine            //描述飞船物理量 
+struct ShipType               //描述飞船型号结构体
 {
-	unsigned int IdentifyNum;          //
-	double ShipMass;                   // 
-	double MirrorRadius;               //
-	unsigned int SystemFrom;           //来自哪一个恒星系 
-	unsigned int SystemTo;             //前往哪一个恒星系
-	float ProgessPershent;             //进度条
-	double PersentofC;                 //当前速度
+	unsigned int IdentifyNum;
+	float ShipMass;
+	float MirrorRadius; 
 	float Tmax;                        //最高耐受温度
 	float MassWet;                     //除了光帆以外的湿重
 	float MassDry;                     //除了光帆之外的干重
 	float MirrorMass;                  //光帆质量 
-	
+	float KBLG;                        //反射率 
+	float ShipWeave;                   //角秒：一千米尺度的物体来回振幅为2.4毫米  
+	float DensityofMirror;             //
+}; 
+
+struct ShipsDefine            //描述飞船物理量 
+{
+	unsigned int IdentifyNum;          //
+	unsigned int NumofShips;           //舰队舰船数量 
+	unsigned int SystemFrom;           //来自哪一个恒星系 
+	unsigned int SystemTo;             //前往哪一个恒星系
+	float ProgessPershent;             //进度条(百分比） 
+	double PersentofC;                 //当前速度
+	float LaunchTime;                  //发射时间 
+	float TargetTime;                  //抵达时间  
 };
+
 //函数部分 
 //恒星参数计算函数 
 //已验证 
@@ -67,9 +78,13 @@ float BraggReflection(float FilmN1,float FilmN2,int FilmNumber,float BaseFilmN);
 float TotalMinMirrowPower(float Tmax,float KBragg,double AreaofMirror);
 float PsailCalluate(float Tmax,float KBragg);
 float SingalSailMaxCable(double MaxMateralStrengh,float Acceleration,float MateralDensity,double MaxCableMass,double MaxWetMass);
+float SailMinNumDensity(float Runit,float InnerP);
+float SailMassCal(float Area);
+float AccelerationCl(float Tmax,float KBragg,double AreaofMirror);
+float DistenseofAcceleration(); 
 
 
-#pragma message("CLY-Version-0.2.0")  ///在编译器中显示版本号，可删 
+#pragma message("CLY-Version-0.2.1")  ///在编译器中显示版本号
 
 ///科学计数法及其生成代码 
 #define E1 10.0
@@ -172,7 +187,7 @@ float SingalSailMaxCable(double MaxMateralStrengh,float Acceleration,float Mater
 #define E98 100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0
 #define E99 1000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0
 #define E100 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000.0
-/************************************************指数对照表生成代码——使用Python编写*************************************/
+/************************************************指数对照表生成代码*************************************/
 /*
 i = 0
 C = "1"
