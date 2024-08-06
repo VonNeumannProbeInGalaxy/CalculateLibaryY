@@ -13,7 +13,7 @@
 #define eV 1.602176565                           //E-19 电子带电量、电子伏与焦耳换算
 #define eThomsonSection 6.65                     //E-29 电子的Thomson截面
 //
-#define SunLight 3.85                         	 //E26 单位瓦 太阳辐射功率 
+#define SunLight 3.85e26                         //E26 单位瓦 太阳辐射功率 
 #define SunRadius 695500000                      //乘以10的8次方 单位米 
 #define SecondofYear 31536000.0                  //为了不去辨别类型，统一使用double类型计算 
 #define AU 149597870691.0                        //天文单位数值
@@ -63,25 +63,27 @@ struct ShipsDefine            //描述飞船物理量
 //函数部分 
 //恒星参数计算函数 
 //已验证 
-float StarsTemp(struct StarsSelf SSCP); 
-float Starslum(double mass); 
-float StarsRadius(double mass);
+double StarsTemp(struct StarsSelf SSCP); 
+double Starslum(double mass); 
+double StarsRadius(double mass);
 //光帆飞船计算函数 
 //有待检验 
-float LaunchBlueShift(double PersentofC);  
-float LaserEfficiency(double PersentofC);
-float TotalLaserEfficiency(double PersentofC);
-float TargetVDemandDysonPower(double PersentofC);
-float LandingCostEnergy(double PersentofC);
-float MirrorRadiustoArea(double RadiusofMirror);
-float BraggReflection(float FilmN1,float FilmN2,int FilmNumber,float BaseFilmN);
-float TotalMinMirrowPower(float Tmax,float KBragg,double AreaofMirror);
-float PsailCalluate(float Tmax,float KBragg);
-float SingalSailMaxCable(double MaxMateralStrengh,float Acceleration,float MateralDensity,double MaxCableMass,double MaxWetMass);
-float SailMinNumDensity(float Runit,float InnerP);
-float SailMassCal(float Area);
-float AccelerationCl(float Tmax,float KBragg,double AreaofMirror);
-float DistenseofAcceleration(); 
+double LaunchBlueShift(double PersentofC);  
+double LaserEfficiency(double PersentofC);
+double TotalLaserEfficiency(double PersentofC);
+double TargetVDemandDysonPower(double PersentofC);
+double LandingCostEnergy(double PersentofC);
+double MirrorRadiustoArea(double RadiusofMirror);
+double BraggReflection(float FilmN1,float FilmN2,int FilmNumber,float BaseFilmN);
+double TotalMinMirrowPower(float Tmax,float KBragg,double AreaofMirror);
+double PsailCalluate(float Tmax,float KBragg);
+double SingalSailMaxCable(double MaxMateralStrengh,float Acceleration,float MateralDensity,double MaxCableMass,double MaxWetMass);
+double SailMinNumDensity(float Runit,float InnerP);
+double SailMassCal(float Area);
+double AccelerationCl(float Tmax,float KBragg,double AreaofMirror);
+double DistenseofAcceleration(); 
 
 
-#pragma message("CLY-Version-0.2.1")  ///在编译器中显示版本号
+#pragma message("CLY-Version-0.2.2")  ///在编译器中显示版本号
+
+#endif

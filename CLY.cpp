@@ -73,7 +73,7 @@ double StarsTemp(struct StarsSelf SSCP)
 	double LC4PK,R2SB;	
 	double P4xA;
 	P4xA = 4.0 *Pai;
-	LC4PK = SSCP.lum * SunLight *E26;
+	LC4PK = SSCP.lum * SunLight;
 	LC4PK = LC4PK / P4xA;
 	R2SB = SSCP.radius * SunRadius;
 	R2SB = pow(R2SB,2);
@@ -220,8 +220,8 @@ double AccelerationCl(double Tmax,double KBragg,double AreaofMirror)
 	return CALUMC;
 }
 //不考虑衍射的精度需求计算——计算加速距离
-//EDL说加速认为是瞬时的，用不上
-//兄啊，为什么用全局变量不传参啊
+//EDL说加速认为是瞬时的，用不上——图片里有就整上了，毕竟我也不知道到时候会用到什么算式 
+//兄啊，为什么用全局变量不传参啊——由于参数过多，使用仅限于本文件内的全局变量可以更容易的验证函数是否正常运作 
 double DistenseofAcceleration()
 {
 	double UPOC,DWNOC,CALUMC;
