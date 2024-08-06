@@ -6,15 +6,17 @@
 //妙妙数字放这里-仅供测试用例 
 static double CMassofShip = 1145141919810.0;
 static double CRadiusofMirror = 1145140.0/2; //飞船反射镜半径 
-static float CBLGk = 0.9998;//反射率 
-static float CTmax = 919.810;//接受能流温度
+static double CBLGk = 0.9998;//反射率 
+static double CTmax = 919.810;//接受能流温度
 //static double CMWet = 5.14;//E11飞船湿重
-static float DensityofMirror = 0.05;//光帆总平均密度，考虑更多死重之后 
-static float ShipWeave = 0.0114514/3600; //角秒：一千米尺度的物体来回振幅为2.4毫米 
+static double DensityofMirror = 0.05;//光帆总平均密度，考虑更多死重之后 
+static double ShipWeave = 0.0114514/3600; //角秒：一千米尺度的物体来回振幅为2.4毫米 
 
 //恒星基本参数计算 
+//现在恒星参数用MIST，不使用这里的拟合
+
 //质量计算半径  
-float StarsRadius(double mass)  ///拟合参数 
+double StarsRadius(double mass)  ///拟合参数 
 {
 	double radius;
 	double Xdss,Rdss,Kdss;
@@ -35,7 +37,7 @@ float StarsRadius(double mass)  ///拟合参数
 }
 
 //质量计算亮度 
-float Starslum(double mass) 
+double Starslum(double mass) 
 {
 	double lum;
 	double XdSs,RdSs;
@@ -66,7 +68,7 @@ float Starslum(double mass)
 }
 
 ///根据相对太阳质量和光度计算等效温度
-float StarsTemp(struct StarsSelf SSCP)   
+double StarsTemp(struct StarsSelf SSCP)   
 {
 	double LC4PK,R2SB;	
 	double P4xA;
@@ -83,30 +85,22 @@ float StarsTemp(struct StarsSelf SSCP)
 }
 
 //恒星际光帆船与RKKV1 -功与速度(0.2.0) 
+
 //根据速度计算波长-蓝移
-float LaunchBlueShift(double PersentofC)  
+double BlueShift(double beta)  
 {
-	double UPOC,DWNOC,CALUMC;
-	UPOC = PersentofC;
-	DWNOC = PersentofC; 
-	UPOC += 1.0;  
-	DWNOC += 1.0;
-	CALUMC = UPOC/DWNOC;
-	UPOC = pow(CALUMC,0.5);
-	return UPOC;
+	//beta是v/c
+	return sqrt((1.0 + beta) / (1.0 - beta));
 }
 //计算目标物体末速度与能量效率关系 
-float LaserEfficiency(double PersentofC)
+double LaserEfficiency(double beta)
 {
-	double UPOC,DWNOC,CALUMC;
-	UPOC = 1.0-PersentofC;
-	DWNOC = 1.0+PersentofC;
-	CALUMC = UPOC/DWNOC;
-	UPOC = 1.0-CALUMC;
-	return UPOC;	
+	//beta是v/c，k是过程变量
+	double k = (1.0 - beta) / (1.0 + beta);
+	return double(1.0 - k);
 }
 //全程情况下光子能量和被加速物体动能比值（总效率） 
-float TotalLaserEfficiency(double PersentofC)
+double TotalLaserEfficiency(double PersentofC)
 {
 	double UPOC,DWNOC,CALUMC;
 	CALUMC = pow(PersentofC,2.0);
@@ -118,7 +112,7 @@ float TotalLaserEfficiency(double PersentofC)
 	return CALUMC;
 }
 //速度与戴森球所需功率
-float TargetVDemandDysonPower(double PersentofC)
+double TargetVDemandDysonPower(double PersentofC)
 {
 	double UPOC,DWNOC,CALUMC;
 	UPOC = 1.0+PersentofC;
@@ -128,7 +122,7 @@ float TargetVDemandDysonPower(double PersentofC)
 	return CALUMC;
 }
 //减速花费光束总能量计算 
-float LandingCostEnergy(double PersentofC)
+double LandingCostEnergy(double PersentofC)
 {
 	double UPOC,DWNOC,CALUMC;
 	DWNOC = 1.0+PersentofC;
@@ -141,7 +135,7 @@ float LandingCostEnergy(double PersentofC)
 }
 //恒星际光帆船与RKKV1 -光帆与航行(0.2.1) 
 //光帆面积 
-float MirrorRadiustoArea(double RadiusofMirror)
+double MirrorRadiustoArea(double RadiusofMirror)
 {
 	double UPOC,DWNOC;
 	UPOC = pow(RadiusofMirror,2);
@@ -149,11 +143,11 @@ float MirrorRadiustoArea(double RadiusofMirror)
 	return DWNOC; 
 }
 //布拉格反射率计算 
-float BraggReflection(float FilmN1,float FilmN2,int FilmNumber,float BaseFilmN)//交替生长膜层1,2折射率，层数，基底折射率 
+double BraggReflection(double FilmN1,double FilmN2,int FilmNumber,double BaseFilmN)//交替生长膜层1,2折射率，层数，基底折射率 
 {
 	//默认 真空 作为介质 -1.00-折射率 
-	float MediumRefractive = 1.00;
-	float UPOC,DWNOC,CALUMC;
+	double MediumRefractive = 1.00;
+	double UPOC,DWNOC,CALUMC;
 	UPOC = pow(FilmN2,2*FilmNumber);
 	DWNOC = pow(FilmN1,2*FilmNumber);
 	CALUMC = UPOC *MediumRefractive;
@@ -165,9 +159,9 @@ float BraggReflection(float FilmN1,float FilmN2,int FilmNumber,float BaseFilmN)/
 	return CALUMC;
 }
 //发射飞船所需功率 
-float TotalMinMirrowPower(float Tmax,float KBragg,double AreaofMirror)
+double TotalMinMirrowPower(double Tmax,double KBragg,double AreaofMirror)
 {
-	float UPOC,DWNOC,CALUMC;
+	double UPOC,DWNOC,CALUMC;
 	DWNOC = pow(Tmax,4);
 	UPOC = StefanBoltzmannConst * DWNOC;
 	CALUMC = 1.0 - KBragg;
@@ -176,9 +170,9 @@ float TotalMinMirrowPower(float Tmax,float KBragg,double AreaofMirror)
 	return  CALUMC;
 }
 //光帆内压 
-float PsailCalluate(float Tmax,float KBragg)
+double PsailCalluate(double Tmax,double KBragg)
 {
-	float UPOC,DWNOC,CALUMC;
+	double UPOC,DWNOC,CALUMC;
 	DWNOC = pow(Tmax,4);
 	UPOC = StefanBoltzmannConst * DWNOC;
 	CALUMC = 1.0 - KBragg;
@@ -188,9 +182,9 @@ float PsailCalluate(float Tmax,float KBragg)
 	return CALUMC;
 }
 //单个光帆极限缆绳长度（经过变形，需要检验） 
-float SingalSailMaxCable(double MaxMateralStrengh,float Acceleration,float MateralDensity,double MaxCableMass,double MaxWetMass)
+double SingalSailMaxCable(double MaxMateralStrengh,double Acceleration,double MateralDensity,double MaxCableMass,double MaxWetMass)
 {
-	float UPOC,DWNOC,CALUMC;
+	double UPOC,DWNOC,CALUMC;
 	UPOC = MaxCableMass * MaxMateralStrengh;
 	DWNOC = MateralDensity * Acceleration;
 	CALUMC = MaxWetMass + MaxCableMass;
@@ -200,24 +194,24 @@ float SingalSailMaxCable(double MaxMateralStrengh,float Acceleration,float Mater
  } 
  //恒星际光帆船与RKKV2 -光帆与航行(0.2.2) 
  //帆底厚度最小值 ——使用碳纤维管计算 
- float SailMinNumDensity(float Runit,float InnerP)
+double SailMinNumDensity(double Runit,double InnerP)
  {
-	float UPOC,DWNOC,CALUMC;
+	double UPOC,DWNOC,CALUMC;
 	UPOC = Runit * InnerP;
 	DWNOC = DensityofCarbonPipe *2;
 	CALUMC = UPOC/DWNOC;
 	return CALUMC;
 } 
 //光帆质量计算
-float SailMassCal(float Area)
+double SailMassCal(double Area)
 {
 	Area = DensityofMirror * Area;
 	return Area;
  }
 //飞船加速度
-float AccelerationCl(float Tmax,float KBragg,double AreaofMirror)
+double AccelerationCl(double Tmax,double KBragg,double AreaofMirror)
 {
-	float UPOC,DWNOC,CALUMC;
+	double UPOC,DWNOC,CALUMC;
 	UPOC = TotalMinMirrowPower(Tmax,KBragg,AreaofMirror);
 	DWNOC = 2.0 - KBragg;
 	CALUMC = UPOC *  DWNOC;
@@ -226,9 +220,11 @@ float AccelerationCl(float Tmax,float KBragg,double AreaofMirror)
 	return CALUMC;
 }
 //不考虑衍射的精度需求计算——计算加速距离
-float DistenseofAcceleration()
+//EDL说加速认为是瞬时的，用不上
+//兄啊，为什么用全局变量不传参啊
+double DistenseofAcceleration()
 {
-	float UPOC,DWNOC,CALUMC;
+	double UPOC,DWNOC,CALUMC;
 	UPOC = 360.0 * CRadiusofMirror;
 	DWNOC = 2.0*Pai;
 	CALUMC = DWNOC * ShipWeave;
@@ -236,8 +232,8 @@ float DistenseofAcceleration()
 	return CALUMC;
 }
 //末速度计算--经过化简 
-float MaxVCl()
+double MaxVCl()
 {
-	float UPOC,DWNOC,CALUMC;
+	double UPOC,DWNOC,CALUMC;
 	return CALUMC;
 } 
