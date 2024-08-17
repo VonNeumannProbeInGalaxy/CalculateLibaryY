@@ -6,19 +6,19 @@
 #define Pai 3.14159265358979323846				 
 #define StefanBoltzmannConst 0.00000005670367    //斯特潘-波尔兹曼常数
 #define C 299792458.0                            //光速
-#define G 6.674                                  //E-11
-#define VacuumPermeability 1.256637061435173     //E-6 真空磁导率 
-#define BoltzmannConstant 1.3806505              //E-23
-#define MassofProton 1.6726231                   //E-27
-#define eV 1.602176565                           //E-19 电子带电量、电子伏与焦耳换算
-#define eThomsonSection 6.65                     //E-29 电子的Thomson截面
+#define G 6.674e-11                              //
+#define VacuumPermeability 1.256637061435173e-6  //真空磁导率 
+#define BoltzmannConstant 1.3806505e-23          //
+#define MassofProton 1.6726231e-27               //
+#define eV 1.602176565e-19                       //电子带电量、电子伏与焦耳换算
+#define eThomsonSection 6.65e-29                 //电子的Thomson截面
 //
-#define SunLight 3.85e26                         //E26 单位瓦 太阳辐射功率 
+#define SunLight 3.85e26                         //瓦 太阳辐射功率 
 #define SunRadius 695500000                      //乘以10的8次方 单位米 
 #define SecondofYear 31536000.0                  //为了不去辨别类型，统一使用double类型计算 
 #define AU 149597870691.0                        //天文单位数值
-#define MassofEarth 5.9742                       //E24 
-#define MassofSun 1.9891                         //E30
+#define MassofEarth 5.9742e24                    // 
+#define MassofSun 1.9891e30                      //
 #define ly 9454254955488000.0                    //光年 
 //预设数值
 #define DensityofCarbonPipe 2000.0
@@ -82,8 +82,10 @@ double SailMinNumDensity(float Runit,float InnerP);
 double SailMassCal(float Area);
 double AccelerationCl(float Tmax,float KBragg,double AreaofMirror);
 double DistenseofAcceleration(); 
+double RasorTime(double VofEnd,double a,double Lengh_A);
+double MaxVCl(double Lengh_A,double a); 
+//目前做到飞船与RKKV的第二张图的第2024行像素 
 
-
-#pragma message("CLY-Version-0.2.2")  ///在编译器中显示版本号
+#pragma message("CLY-Version-0.2.3")  ///在编译器中显示版本号
 
 #endif

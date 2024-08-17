@@ -36,7 +36,7 @@ double StarsRadius(double mass)  ///拟合参数
 	return radius;
 }
 
-//质量计算亮度 
+//质量计算亮度   后期可能要修改 
 double Starslum(double mass) 
 {
 	double lum;
@@ -220,8 +220,6 @@ double AccelerationCl(double Tmax,double KBragg,double AreaofMirror)
 	return CALUMC;
 }
 //不考虑衍射的精度需求计算——计算加速距离
-//EDL说加速认为是瞬时的，用不上——图片里有就整上了，毕竟我也不知道到时候会用到什么算式 
-//兄啊，为什么用全局变量不传参啊——由于参数过多，使用仅限于本文件内的全局变量可以更容易的验证函数是否正常运作 
 double DistenseofAcceleration()
 {
 	double UPOC,DWNOC,CALUMC;
@@ -231,9 +229,39 @@ double DistenseofAcceleration()
 	CALUMC = UPOC / CALUMC;
 	return CALUMC;
 }
-//末速度计算--经过化简 
-double MaxVCl()
+//激光器开机时长
+double RasorTime(double VofEnd,double a,double Lengh_A)//末速度，加速度，加速距离，加速距离在上一个式子中计算得出 
 {
 	double UPOC,DWNOC,CALUMC;
+	UPOC = C*VofEnd;
+	DWNOC = pow(C,2);
+	CALUMC = pow(VofEnd,2);
+	DWNOC = DWNOC - CALUMC;
+	CALUMC = pow(DWNOC,0.5);
+	DWNOC = a * CALUMC;
+	CALUMC = UPOC/DWNOC;
+	UPOC = Lengh_A/C;
+	CALUMC -= UPOC;
+	return CALUMC;
+ } 
+//末速度计算--经过化简（0.2.3） 
+double MaxVCl(double Lengh_A,double a)
+{
+	double UPOC,DWNOC,CALUMC;
+	UPOC = pow(Lengh_A,2);
+	UPOC = -1.0*UPOC;
+	DWNOC = pow(a,2);
+	UPOC = UPOC*DWNOC;
+	DWNOC = pow(C,2);
+	DWNOC = DWNOC *a;
+	UPOC -= DWNOC;
+	DWNOC = pow(C,4);
+	UPOC += DWNOC;
+	DWNOC = UPOC -1.00;
+	CALUMC = UPOC/DWNOC;
+	UPOC = pow(C,2);
+	CALUMC = CALUMC*UPOC;
+	CALUMC = pow(CALUMC,0.5);
 	return CALUMC;
 } 
+
